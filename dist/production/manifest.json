@@ -1,0 +1,61 @@
+{
+  "manifest_version": "1",
+  "type": "WebApp",
+  "meta": {
+    "name": "Raccoon Tools ",
+    "version": "0.0.0",
+    "minimum-overwolf-version": "0.85.0.0",
+    "author": "Leon Machens",
+    "icon": "assets/icon.png",
+    "icon_gray": "assets/icon_gray.png",
+    "launcher_icon": "assets/launcher_icon.ico",
+    "description": ""
+  },
+  "permissions": [],
+  "data": {
+    "game_targeting": {
+      "type": "all"
+    },
+    "start_window": "main",
+    "windows": {
+      "main": {
+        "file": "main.html",
+        "transparent": true,
+        "clickthrough": true,
+        "resizable": false,
+        "show_in_taskbar": true,
+        "topmost": true,
+        "desktop_only": false,
+        "grab_keyboard_focus": true,
+        "grab_focus_on_desktop": true,
+        "size": {
+          "width": 300,
+          "height": 500
+        },
+        "min_size": {
+          "width": 300,
+          "height": 500
+        },
+        "start_position": {
+          "Top": 10,
+          "Left": 10
+        }
+      }
+    },
+    "extra-objects": {
+      "simple-io-plugin": {
+        "file": "plugins/simple-io-plugin.dll",
+        "class": "overwolf.plugins.SimpleIOPlugin"
+      }
+    },
+    "externally_connectable": {
+      "matches": [
+        "https://*.google-analytics.com",
+        "https://www.google-analytics.com",
+        "https://widgetbot.io",
+        "https://sentry.io"
+      ]
+    }
+  },
+  "version": "0.0.0"
+}
