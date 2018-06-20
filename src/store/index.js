@@ -6,7 +6,9 @@ import {
   navigateLeft,
   navigateRight,
   navigateUp,
-  trackGameInfo
+  selectItem,
+  trackGameInfo,
+  unselectItem
 } from './actions';
 import { persistReducer, persistStore } from 'redux-persist';
 
@@ -38,7 +40,11 @@ export const persistor = persistStore(store, null, () => {
   store.dispatch(fetchVersion());
   store.dispatch(trackGameInfo());
   document.addEventListener('keydown', e => {
-    if (e.keyCode === 38) {
+    if (e.keyCode === 13) {
+      store.dispatch(selectItem());
+    } else if (e.keyCode === 27) {
+      store.dispatch(unselectItem());
+    } else if (e.keyCode === 38) {
       store.dispatch(navigateUp());
     } else if (e.keyCode === 40) {
       store.dispatch(navigateDown());

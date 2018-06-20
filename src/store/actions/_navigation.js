@@ -4,8 +4,12 @@ import {
   NAVIGATE_RIGHT,
   NAVIGATE_UP,
   REGISTER_ITEMS,
-  UNREGISTER_ITEMS
+  SELECT_ITEM,
+  UNREGISTER_ITEMS,
+  UNSELECT_ITEM
 } from '../types';
+
+import get from 'lodash/get';
 
 export const navigateDown = () => {
   return dispatch => {
@@ -57,6 +61,36 @@ export const unregisterItems = ({ items }) => {
       data: {
         items
       }
+    });
+  };
+};
+
+export const selectItem = () => {
+  return (dispatch, getState) => {
+    const {
+      navigation: { cursor, items }
+    } = getState();
+    const item = get(items, cursor);
+    if (item.nested) return dispatch(navigateRight());
+
+    dispatch({
+      type: SELECT_ITEM,
+      data: {
+        item
+      }
+    });
+  };
+};
+
+export const unselectItem = () => {
+  return (dispatch, getState) => {
+    const {
+      navigation: { selectedItem }
+    } = getState();
+    if (!selectedItem) return dispatch(navigateLeft());
+
+    dispatch({
+      type: UNSELECT_ITEM
     });
   };
 };

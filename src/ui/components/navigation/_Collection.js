@@ -1,29 +1,18 @@
-import { registerItems, unregisterItems } from '../../store/actions';
+import { registerItems, unregisterItems } from '../../../store/actions';
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-const items = {
-  item1: {},
-  item2: {},
-  item3: {
-    nested: {
-      item4: {},
-      item5: {}
-    }
-  }
-};
-
-class General extends PureComponent {
+class Collection extends PureComponent {
   componentDidMount() {
-    const { registerItems } = this.props;
+    const { registerItems, items } = this.props;
     registerItems({ items });
   }
 
   componentWillUnmount() {
-    const { unregisterItems } = this.props;
+    const { unregisterItems, items } = this.props;
     unregisterItems({ items });
   }
 
@@ -32,9 +21,10 @@ class General extends PureComponent {
   }
 }
 
-General.propTypes = {
+Collection.propTypes = {
   registerItems: PropTypes.func.isRequired,
-  unregisterItems: PropTypes.func.isRequired
+  unregisterItems: PropTypes.func.isRequired,
+  items: PropTypes.object.isRequired
 };
 
 const mapDispatchToProps = dispatch => {
@@ -47,6 +37,6 @@ const mapDispatchToProps = dispatch => {
 const enhance = connect(
   null,
   mapDispatchToProps
-)(General);
+)(Collection);
 
-export { enhance as General };
+export { enhance as Collection };

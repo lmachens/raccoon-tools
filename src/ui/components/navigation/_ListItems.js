@@ -9,7 +9,7 @@ class ListItems extends PureComponent {
     const { cursor, items, prevCursor } = this.props;
     const path = toPath(cursor);
     return (
-      <List>
+      <List dense>
         {Object.entries(items).map(([key, value]) => {
           const combinedKey = prevCursor ? `${prevCursor}.${key}` : key;
           const selected = cursor === combinedKey;
@@ -19,7 +19,7 @@ class ListItems extends PureComponent {
               <ListItemText
                 primary={
                   <Typography style={{ textDecoration: selected ? 'underline' : null }}>
-                    {combinedKey}
+                    {value.title || combinedKey}
                   </Typography>
                 }
               />

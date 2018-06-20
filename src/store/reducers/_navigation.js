@@ -4,7 +4,9 @@ import {
   NAVIGATE_RIGHT,
   NAVIGATE_UP,
   REGISTER_ITEMS,
-  UNREGISTER_ITEMS
+  SELECT_ITEM,
+  UNREGISTER_ITEMS,
+  UNSELECT_ITEM
 } from '../types';
 
 import first from 'lodash/first';
@@ -16,8 +18,9 @@ import toPath from 'lodash/toPath';
 
 export const navigation = (
   state = {
-    cursor: 'item1',
-    items: {}
+    cursor: 'profile',
+    items: {},
+    selectedItem: null
   },
   { type, data }
 ) => {
@@ -81,6 +84,12 @@ export const navigation = (
     case UNREGISTER_ITEMS: {
       const items = omit(state.items, ...data.items);
       return { ...state, items };
+    }
+    case SELECT_ITEM:
+      return { ...state, selectedItem: data.item };
+    case UNSELECT_ITEM: {
+      const newState = omit(state, 'selectedItem');
+      return newState;
     }
   }
   return state;
