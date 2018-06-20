@@ -3,6 +3,8 @@ import {
   fetchOverwolfUser,
   fetchVersion,
   navigateDown,
+  navigateLeft,
+  navigateRight,
   navigateUp,
   trackGameInfo
 } from './actions';
@@ -17,7 +19,7 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['games']
+  blacklist: ['games', 'navigation']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -40,6 +42,10 @@ export const persistor = persistStore(store, null, () => {
       store.dispatch(navigateUp());
     } else if (e.keyCode === 40) {
       store.dispatch(navigateDown());
+    } else if (e.keyCode === 39) {
+      store.dispatch(navigateRight());
+    } else if (e.keyCode === 37) {
+      store.dispatch(navigateLeft());
     }
   });
 });

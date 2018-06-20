@@ -629,6 +629,8 @@
 	const NAVIGATE_UP = 'NAVIGATE_UP';
 	const NAVIGATE_LEFT = 'NAVIGATE_LEFT';
 	const NAVIGATE_RIGHT = 'NAVIGATE_RIGHT';
+	const REGISTER_ITEMS = 'REGISTER_ITEMS';
+	const UNREGISTER_ITEMS = 'UNREGISTER_ITEMS';
 
 	const RECEIVE_OVERWOLF_USER = 'RECEIVE_OVERWOLF_USER';
 	const RECEIVE_VERSION = 'RECEIVE_VERSION';
@@ -701,6 +703,46 @@
 	  return dispatch => {
 	    dispatch({
 	      type: NAVIGATE_UP
+	    });
+	  };
+	};
+	const navigateLeft = () => {
+	  return dispatch => {
+	    dispatch({
+	      type: NAVIGATE_LEFT
+	    });
+	  };
+	};
+	const navigateRight = () => {
+	  return dispatch => {
+	    dispatch({
+	      type: NAVIGATE_RIGHT
+	    });
+	  };
+	};
+	const registerItems = ({
+	  items,
+	  page
+	}) => {
+	  return dispatch => {
+	    dispatch({
+	      type: REGISTER_ITEMS,
+	      data: {
+	        items,
+	        page
+	      }
+	    });
+	  };
+	};
+	const unregisterItems = ({
+	  page
+	}) => {
+	  return dispatch => {
+	    dispatch({
+	      type: UNREGISTER_ITEMS,
+	      data: {
+	        page
+	      }
 	    });
 	  };
 	};
@@ -4543,36 +4585,456 @@
 	  }
 	};
 
+	/**
+	 * Gets the first element of `array`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @alias first
+	 * @category Array
+	 * @param {Array} array The array to query.
+	 * @returns {*} Returns the first element of `array`.
+	 * @example
+	 *
+	 * _.head([1, 2, 3]);
+	 * // => 1
+	 *
+	 * _.head([]);
+	 * // => undefined
+	 */
+	function head(array) {
+	  return (array && array.length) ? array[0] : undefined;
+	}
+
+	var head_1 = head;
+
+	var first = head_1;
+
+	/**
+	 * Gets the value at `path` of `object`. If the resolved value is
+	 * `undefined`, the `defaultValue` is returned in its place.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 3.7.0
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @param {Array|string} path The path of the property to get.
+	 * @param {*} [defaultValue] The value returned for `undefined` resolved values.
+	 * @returns {*} Returns the resolved value.
+	 * @example
+	 *
+	 * var object = { 'a': [{ 'b': { 'c': 3 } }] };
+	 *
+	 * _.get(object, 'a[0].b.c');
+	 * // => 3
+	 *
+	 * _.get(object, ['a', '0', 'b', 'c']);
+	 * // => 3
+	 *
+	 * _.get(object, 'a.b.c', 'default');
+	 * // => 'default'
+	 */
+	function get(object, path, defaultValue) {
+	  var result = object == null ? undefined : _baseGet(object, path);
+	  return result === undefined ? defaultValue : result;
+	}
+
+	var get_1 = get;
+
+	/**
+	 * The base implementation of `_.findIndex` and `_.findLastIndex` without
+	 * support for iteratee shorthands.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {Function} predicate The function invoked per iteration.
+	 * @param {number} fromIndex The index to search from.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseFindIndex(array, predicate, fromIndex, fromRight) {
+	  var length = array.length,
+	      index = fromIndex + (fromRight ? 1 : -1);
+
+	  while ((fromRight ? index-- : ++index < length)) {
+	    if (predicate(array[index], index, array)) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	var _baseFindIndex = baseFindIndex;
+
+	/**
+	 * The base implementation of `_.isNaN` without support for number objects.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is `NaN`, else `false`.
+	 */
+	function baseIsNaN(value) {
+	  return value !== value;
+	}
+
+	var _baseIsNaN = baseIsNaN;
+
+	/**
+	 * A specialized version of `_.indexOf` which performs strict equality
+	 * comparisons of values, i.e. `===`.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {*} value The value to search for.
+	 * @param {number} fromIndex The index to search from.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function strictIndexOf(array, value, fromIndex) {
+	  var index = fromIndex - 1,
+	      length = array.length;
+
+	  while (++index < length) {
+	    if (array[index] === value) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+
+	var _strictIndexOf = strictIndexOf;
+
+	/**
+	 * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {*} value The value to search for.
+	 * @param {number} fromIndex The index to search from.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseIndexOf(array, value, fromIndex) {
+	  return value === value
+	    ? _strictIndexOf(array, value, fromIndex)
+	    : _baseFindIndex(array, _baseIsNaN, fromIndex);
+	}
+
+	var _baseIndexOf = baseIndexOf;
+
+	/** Used as references for various `Number` constants. */
+	var NAN = 0 / 0;
+
+	/** Used to match leading and trailing whitespace. */
+	var reTrim = /^\s+|\s+$/g;
+
+	/** Used to detect bad signed hexadecimal string values. */
+	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+	/** Used to detect binary string values. */
+	var reIsBinary = /^0b[01]+$/i;
+
+	/** Used to detect octal string values. */
+	var reIsOctal = /^0o[0-7]+$/i;
+
+	/** Built-in method references without a dependency on `root`. */
+	var freeParseInt = parseInt;
+
+	/**
+	 * Converts `value` to a number.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to process.
+	 * @returns {number} Returns the number.
+	 * @example
+	 *
+	 * _.toNumber(3.2);
+	 * // => 3.2
+	 *
+	 * _.toNumber(Number.MIN_VALUE);
+	 * // => 5e-324
+	 *
+	 * _.toNumber(Infinity);
+	 * // => Infinity
+	 *
+	 * _.toNumber('3.2');
+	 * // => 3.2
+	 */
+	function toNumber(value) {
+	  if (typeof value == 'number') {
+	    return value;
+	  }
+	  if (isSymbol_1(value)) {
+	    return NAN;
+	  }
+	  if (isObject_1(value)) {
+	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+	    value = isObject_1(other) ? (other + '') : other;
+	  }
+	  if (typeof value != 'string') {
+	    return value === 0 ? value : +value;
+	  }
+	  value = value.replace(reTrim, '');
+	  var isBinary = reIsBinary.test(value);
+	  return (isBinary || reIsOctal.test(value))
+	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+	    : (reIsBadHex.test(value) ? NAN : +value);
+	}
+
+	var toNumber_1 = toNumber;
+
+	/** Used as references for various `Number` constants. */
+	var INFINITY$2 = 1 / 0,
+	    MAX_INTEGER = 1.7976931348623157e+308;
+
+	/**
+	 * Converts `value` to a finite number.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.12.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {number} Returns the converted number.
+	 * @example
+	 *
+	 * _.toFinite(3.2);
+	 * // => 3.2
+	 *
+	 * _.toFinite(Number.MIN_VALUE);
+	 * // => 5e-324
+	 *
+	 * _.toFinite(Infinity);
+	 * // => 1.7976931348623157e+308
+	 *
+	 * _.toFinite('3.2');
+	 * // => 3.2
+	 */
+	function toFinite(value) {
+	  if (!value) {
+	    return value === 0 ? value : 0;
+	  }
+	  value = toNumber_1(value);
+	  if (value === INFINITY$2 || value === -INFINITY$2) {
+	    var sign = (value < 0 ? -1 : 1);
+	    return sign * MAX_INTEGER;
+	  }
+	  return value === value ? value : 0;
+	}
+
+	var toFinite_1 = toFinite;
+
+	/**
+	 * Converts `value` to an integer.
+	 *
+	 * **Note:** This method is loosely based on
+	 * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to convert.
+	 * @returns {number} Returns the converted integer.
+	 * @example
+	 *
+	 * _.toInteger(3.2);
+	 * // => 3
+	 *
+	 * _.toInteger(Number.MIN_VALUE);
+	 * // => 0
+	 *
+	 * _.toInteger(Infinity);
+	 * // => 1.7976931348623157e+308
+	 *
+	 * _.toInteger('3.2');
+	 * // => 3
+	 */
+	function toInteger(value) {
+	  var result = toFinite_1(value),
+	      remainder = result % 1;
+
+	  return result === result ? (remainder ? result - remainder : result) : 0;
+	}
+
+	var toInteger_1 = toInteger;
+
+	/* Built-in method references for those with the same name as other `lodash` methods. */
+	var nativeMax$1 = Math.max;
+
+	/**
+	 * Gets the index at which the first occurrence of `value` is found in `array`
+	 * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+	 * for equality comparisons. If `fromIndex` is negative, it's used as the
+	 * offset from the end of `array`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Array
+	 * @param {Array} array The array to inspect.
+	 * @param {*} value The value to search for.
+	 * @param {number} [fromIndex=0] The index to search from.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 * @example
+	 *
+	 * _.indexOf([1, 2, 1, 2], 2);
+	 * // => 1
+	 *
+	 * // Search from the `fromIndex`.
+	 * _.indexOf([1, 2, 1, 2], 2, 2);
+	 * // => 3
+	 */
+	function indexOf(array, value, fromIndex) {
+	  var length = array == null ? 0 : array.length;
+	  if (!length) {
+	    return -1;
+	  }
+	  var index = fromIndex == null ? 0 : toInteger_1(fromIndex);
+	  if (index < 0) {
+	    index = nativeMax$1(length + index, 0);
+	  }
+	  return _baseIndexOf(array, value, index);
+	}
+
+	var indexOf_1 = indexOf;
+
+	/**
+	 * Converts `value` to a property path array.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Util
+	 * @param {*} value The value to convert.
+	 * @returns {Array} Returns the new property path array.
+	 * @example
+	 *
+	 * _.toPath('a.b.c');
+	 * // => ['a', 'b', 'c']
+	 *
+	 * _.toPath('a[0].b.c');
+	 * // => ['a', '0', 'b', 'c']
+	 */
+	function toPath(value) {
+	  if (isArray_1(value)) {
+	    return _arrayMap(value, _toKey);
+	  }
+	  return isSymbol_1(value) ? [value] : _copyArray(_stringToPath(toString_1(value)));
+	}
+
+	var toPath_1 = toPath;
+
+	/*
+	pages = {
+	  general: {
+	    item1: {},
+	    item2: {},
+	    item3: {
+	      item4: {},
+	      item5: {}
+	    }
+	  },
+	  other: {}
+	}
+	*/
+
 	const navigation = (state = {
-	  cursor: 0,
-	  items: [0, 1, 2]
+	  cursor: 'general.item1',
+	  pages: {}
 	}, {
-	  type
+	  type,
+	  data
 	}) => {
 	  switch (type) {
 	    case NAVIGATE_DOWN:
-	      if (state.cursor < state.items.length - 1) {
-	        return { ...state,
-	          cursor: state.cursor + 1
-	        };
-	      }
+	      {
+	        const path = toPath_1(state.cursor);
+	        const prevPath = path.slice(0, path.length - 1);
+	        const nestedPath = last_1(path);
+	        const items = get_1(state.pages, prevPath);
+	        const keys = Object.keys(items);
+	        const currentIndex = indexOf_1(keys, nestedPath);
+	        const newKey = keys[currentIndex + 1];
 
+	        if (newKey) {
+	          const newPath = [...prevPath, newKey];
+	          const cursor = newPath.reduce((curr, next) => `${curr}.${next}`);
+	          return { ...state,
+	            cursor
+	          };
+	        }
+	      }
 	      break;
 
 	    case NAVIGATE_UP:
-	      if (state.cursor > 0) {
-	        return { ...state,
-	          cursor: state.cursor - 1
-	        };
-	      }
+	      {
+	        const path = toPath_1(state.cursor);
+	        const prevPath = path.slice(0, path.length - 1);
+	        const nestedPath = last_1(path);
+	        const items = get_1(state.pages, prevPath);
+	        const keys = Object.keys(items);
+	        const currentIndex = indexOf_1(keys, nestedPath);
+	        const newKey = keys[currentIndex - 1];
 
+	        if (newKey) {
+	          const newPath = [...prevPath, newKey];
+	          const cursor = newPath.reduce((curr, next) => `${curr}.${next}`);
+	          return { ...state,
+	            cursor
+	          };
+	        }
+	      }
 	      break;
 
 	    case NAVIGATE_LEFT:
+	      {
+	        const path = toPath_1(state.cursor);
+
+	        if (path.length > 2) {
+	          const prevPath = path.slice(0, path.length - 2);
+	          const cursor = prevPath.reduce((curr, next) => `${curr}.${next}`);
+	          return { ...state,
+	            cursor
+	          };
+	        }
+	      }
 	      break;
 
 	    case NAVIGATE_RIGHT:
+	      {
+	        const nestedItems = get_1(state.pages, `${state.cursor}.nested`);
+
+	        if (nestedItems) {
+	          const firstChild = first(Object.keys(nestedItems));
+	          const cursor = `${state.cursor}.nested.${firstChild}`;
+	          return { ...state,
+	            cursor
+	          };
+	        }
+	      }
 	      break;
+
+	    case REGISTER_ITEMS:
+	      {
+	        const pages = { ...state.pages,
+	          [data.page]: data.items
+	        };
+	        return { ...state,
+	          pages
+	        };
+	      }
+
+	    case UNREGISTER_ITEMS:
+	      {
+	        const pages = omit_1(state.pages, data.page);
+	        return { ...state,
+	          pages
+	        };
+	      }
 	  }
 
 	  return state;
@@ -4727,7 +5189,7 @@
 	const persistConfig = {
 	  key: 'root',
 	  storage: storage$1,
-	  blacklist: ['games']
+	  blacklist: ['games', 'navigation']
 	};
 	const persistedReducer = persistReducer(persistConfig, reducers);
 	let createStoreWithMiddleware;
@@ -4749,6 +5211,10 @@
 	      store.dispatch(navigateUp());
 	    } else if (e.keyCode === 40) {
 	      store.dispatch(navigateDown());
+	    } else if (e.keyCode === 39) {
+	      store.dispatch(navigateRight());
+	    } else if (e.keyCode === 37) {
+	      store.dispatch(navigateLeft());
 	    }
 	  });
 	});
@@ -46892,38 +47358,96 @@
 	    fontWeight: 'bold'
 	  }
 	};
+	const page = 'general';
+	const items = {
+	  item1: {},
+	  item2: {},
+	  item3: {
+	    nested: {
+	      item4: {},
+	      item5: {}
+	    }
+	  }
+	};
+	const allItems = {
+	  general: { ...items
+	  }
+	};
 
-	class HomePage extends react_2 {
+	class ListItems extends react_2 {
 	  render() {
 	    const {
-	      cursor
+	      cursor,
+	      items,
+	      page
 	    } = this.props;
-	    return react.createElement(List$2, null, react.createElement(ListItem$2, {
-	      button: true,
-	      dense: true
-	    }, react.createElement(ListItemText$2, {
-	      inset: cursor === 0,
-	      primary: "Trash"
-	    })), react.createElement(ListItem$2, {
-	      button: true,
-	      dense: true
-	    }, react.createElement(ListItemText$2, {
-	      inset: cursor === 1,
-	      primary: "Trash2"
-	    })), react.createElement(ListItem$2, {
-	      button: true,
-	      dense: true
-	    }, react.createElement(ListItemText$2, {
-	      inset: cursor === 2,
-	      primary: "Trash3"
-	    })), react.createElement(Typography$2, null, "Home"));
+	    const path = toPath_1(cursor);
+	    return react.createElement(List$2, null, Object.entries(items).map(([key, value]) => {
+	      const combinedKey = `${page}.${key}`;
+	      const selected = cursor === combinedKey;
+	      return react.createElement(ListItem$2, {
+	        button: true,
+	        dense: true,
+	        key: combinedKey
+	      }, path.length > 2 && react.createElement(Typography$2, null, '<='), react.createElement(ListItemText$2, {
+	        primary: react.createElement(Typography$2, {
+	          style: {
+	            textDecoration: selected ? 'underline' : null
+	          }
+	        }, combinedKey)
+	      }), value.nested && react.createElement(Typography$2, null, '=>'));
+	    }));
 	  }
 
 	}
 
-	HomePage.propTypes = {
+	ListItems.propTypes = {
+	  cursor: propTypes.string.isRequired,
+	  items: propTypes.object.isRequired,
+	  page: propTypes.string.isRequired
+	};
+
+	class General extends react_2 {
+	  componentDidMount() {
+	    const {
+	      registerItems: registerItems$$1
+	    } = this.props;
+	    registerItems$$1({
+	      items,
+	      page
+	    });
+	  }
+
+	  componentWillUnmount() {
+	    const {
+	      unregisterItems: unregisterItems$$1
+	    } = this.props;
+	    unregisterItems$$1({
+	      page
+	    });
+	  }
+
+	  render() {
+	    const {
+	      cursor
+	    } = this.props;
+	    const path = toPath_1(cursor);
+	    const prevPath = path.slice(0, path.length - 1);
+	    const prevCursor = prevPath.reduce((curr, next) => `${curr}.${next}`);
+	    return react.createElement(ListItems, {
+	      cursor: cursor,
+	      items: get_1(allItems, prevPath),
+	      page: prevCursor
+	    });
+	  }
+
+	}
+
+	General.propTypes = {
 	  classes: propTypes.object.isRequired,
-	  cursor: propTypes.number.isRequired
+	  cursor: propTypes.string.isRequired,
+	  registerItems: propTypes.func.isRequired,
+	  unregisterItems: propTypes.func.isRequired
 	};
 
 	const mapStateToProps$1 = ({
@@ -46936,7 +47460,14 @@
 	  };
 	};
 
-	const enhance$1 = compose$1(styles_3(styles$3), connect(mapStateToProps$1))(HomePage);
+	const mapDispatchToProps = dispatch => {
+	  return {
+	    registerItems: bindActionCreators(registerItems, dispatch),
+	    unregisterItems: bindActionCreators(unregisterItems, dispatch)
+	  };
+	};
+
+	const enhance$1 = compose$1(styles_3(styles$3), connect(mapStateToProps$1, mapDispatchToProps))(General);
 
 	var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 

@@ -1,7 +1,7 @@
 import { persistor, store } from '../../store';
 
 import { AppLayout } from '../../ui/layouts';
-import { HomePage } from '../../ui/pages';
+import { General } from '../../ui/pages';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
@@ -17,7 +17,7 @@ const App = (
     <PersistGate loading={null} persistor={persistor}>
       <MuiThemeProvider theme={dark}>
         <AppLayout>
-          <HomePage />
+          <General />
         </AppLayout>
       </MuiThemeProvider>
     </PersistGate>
