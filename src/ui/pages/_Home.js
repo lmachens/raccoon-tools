@@ -2,6 +2,8 @@ import { List, ListItem, ListItemText, Typography } from '../components/generic'
 import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
+import compose from 'recompose/compose';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
@@ -11,29 +13,11 @@ const styles = {
 };
 
 class HomePage extends PureComponent {
-  state = {
-    cursor: 0,
-    result: [0, 1, 2]
-  };
-  handleKeyDown = e => {
-    const { cursor, result } = this.state;
-    // arrow up/down button should select next/previous list element
-    if (e.keyCode === 38 && cursor > 0) {
-      this.setState(prevState => ({
-        cursor: prevState.cursor - 1
-      }));
-    } else if (e.keyCode === 40 && cursor < result.length - 1) {
-      this.setState(prevState => ({
-        cursor: prevState.cursor + 1
-      }));
-    }
-  };
-
   render() {
-    const { cursor } = this.state;
+    const { cursor } = this.props;
 
     return (
-      <List onKeyDown={this.handleKeyDown}>
+      <List>
         <ListItem button dense>
           <ListItemText inset={cursor === 0} primary="Trash" />
         </ListItem>
@@ -50,9 +34,19 @@ class HomePage extends PureComponent {
 }
 
 HomePage.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  cursor: PropTypes.number.isRequired
 };
 
-const enhance = withStyles(styles)(HomePage);
+const mapStateToProps = ({ navigation: { cursor } }) => {
+  return {
+    cursor
+  };
+};
+
+const enhance = compose(
+  withStyles(styles),
+  connect(mapStateToProps)
+)(HomePage);
 
 export { enhance as HomePage };

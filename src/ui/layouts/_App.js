@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
 import PropTypes from 'prop-types';
 import { Typography } from '../components/generic';
@@ -32,12 +32,12 @@ class AppLayout extends PureComponent {
     const { classes, children, version } = this.props;
 
     return (
-      <Fragment>
+      <>
         <header className={classes.header} onMouseDown={dragMove}>
           <Typography>Raccoon Tools v{version}</Typography>
         </header>
         {children}
-      </Fragment>
+      </>
     );
   }
 }

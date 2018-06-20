@@ -1,5 +1,11 @@
 import { applyMiddleware, createStore } from 'redux';
-import { fetchOverwolfUser, fetchVersion, trackGameInfo } from './actions';
+import {
+  fetchOverwolfUser,
+  fetchVersion,
+  navigateDown,
+  navigateUp,
+  trackGameInfo
+} from './actions';
 import { persistReducer, persistStore } from 'redux-persist';
 
 import { RAVEN_URL } from '../api/environment';
@@ -29,4 +35,11 @@ export const persistor = persistStore(store, null, () => {
   store.dispatch(fetchOverwolfUser());
   store.dispatch(fetchVersion());
   store.dispatch(trackGameInfo());
+  document.addEventListener('keydown', e => {
+    if (e.keyCode === 38) {
+      store.dispatch(navigateUp());
+    } else if (e.keyCode === 40) {
+      store.dispatch(navigateDown());
+    }
+  });
 });

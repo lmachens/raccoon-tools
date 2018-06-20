@@ -625,6 +625,11 @@
 	const SET_GAME_IS_RUNNING = 'SET_GAME_IS_RUNNING';
 	const SET_GAME_IS_TERMINATED = 'SET_GAME_IS_TERMINATED';
 
+	const NAVIGATE_DOWN = 'NAVIGATE_DOWN';
+	const NAVIGATE_UP = 'NAVIGATE_UP';
+	const NAVIGATE_LEFT = 'NAVIGATE_LEFT';
+	const NAVIGATE_RIGHT = 'NAVIGATE_RIGHT';
+
 	const RECEIVE_OVERWOLF_USER = 'RECEIVE_OVERWOLF_USER';
 	const RECEIVE_VERSION = 'RECEIVE_VERSION';
 
@@ -682,6 +687,21 @@
 
 	    addGameLaunchedListener(gameLaunchedListener);
 	    addGameInfoUpdatedListener(gameInfoUpdatedListener);
+	  };
+	};
+
+	const navigateDown = () => {
+	  return dispatch => {
+	    dispatch({
+	      type: NAVIGATE_DOWN
+	    });
+	  };
+	};
+	const navigateUp = () => {
+	  return dispatch => {
+	    dispatch({
+	      type: NAVIGATE_UP
+	    });
 	  };
 	};
 
@@ -4523,6 +4543,41 @@
 	  }
 	};
 
+	const navigation = (state = {
+	  cursor: 0,
+	  items: [0, 1, 2]
+	}, {
+	  type
+	}) => {
+	  switch (type) {
+	    case NAVIGATE_DOWN:
+	      if (state.cursor < state.items.length - 1) {
+	        return { ...state,
+	          cursor: state.cursor + 1
+	        };
+	      }
+
+	      break;
+
+	    case NAVIGATE_UP:
+	      if (state.cursor > 0) {
+	        return { ...state,
+	          cursor: state.cursor - 1
+	        };
+	      }
+
+	      break;
+
+	    case NAVIGATE_LEFT:
+	      break;
+
+	    case NAVIGATE_RIGHT:
+	      break;
+	  }
+
+	  return state;
+	};
+
 	const utilities = (state = {
 	  overwolfUser: null,
 	  version: ''
@@ -4548,6 +4603,7 @@
 
 	const reducers = combineReducers({
 	  games,
+	  navigation,
 	  utilities
 	});
 
@@ -4688,6 +4744,13 @@
 	  store.dispatch(fetchOverwolfUser());
 	  store.dispatch(fetchVersion());
 	  store.dispatch(trackGameInfo());
+	  document.addEventListener('keydown', e => {
+	    if (e.keyCode === 38) {
+	      store.dispatch(navigateUp());
+	    } else if (e.keyCode === 40) {
+	      store.dispatch(navigateDown());
+	    }
+	  });
 	});
 
 	/*
@@ -46798,7 +46861,7 @@
 	      children,
 	      version
 	    } = this.props;
-	    return react.createElement(react_5, null, react.createElement("header", {
+	    return react.createElement(react.Fragment, null, react.createElement("header", {
 	      className: classes.header,
 	      onMouseDown: dragMove
 	    }, react.createElement(Typography$2, null, "Raccoon Tools v", version)), children);
@@ -46831,42 +46894,11 @@
 	};
 
 	class HomePage extends react_2 {
-	  constructor(...args) {
-	    super(...args);
-
-	    _defineProperty$2(this, "state", {
-	      cursor: 0,
-	      result: [0, 1, 2]
-	    });
-
-	    _defineProperty$2(this, "handleKeyDown", e => {
-	      const {
-	        cursor,
-	        result
-	      } = this.state; // arrow up/down button should select next/previous list element
-
-	      if (e.keyCode === 38 && cursor > 0) {
-	        this.setState(prevState => ({
-	          cursor: prevState.cursor - 1
-	        }));
-	      } else if (e.keyCode === 40 && cursor < result.length - 1) {
-	        this.setState(prevState => ({
-	          cursor: prevState.cursor + 1
-	        }));
-	      }
-	    });
-	  }
-
 	  render() {
 	    const {
-	      classes
-	    } = this.props;
-	    const {
 	      cursor
-	    } = this.state;
-	    return react.createElement(List$2, {
-	      onKeyDown: this.handleKeyDown
-	    }, react.createElement(ListItem$2, {
+	    } = this.props;
+	    return react.createElement(List$2, null, react.createElement(ListItem$2, {
 	      button: true,
 	      dense: true
 	    }, react.createElement(ListItemText$2, {
@@ -46890,9 +46922,21 @@
 	}
 
 	HomePage.propTypes = {
-	  classes: propTypes.object.isRequired
+	  classes: propTypes.object.isRequired,
+	  cursor: propTypes.number.isRequired
 	};
-	const enhance$1 = styles_3(styles$3)(HomePage);
+
+	const mapStateToProps$1 = ({
+	  navigation: {
+	    cursor
+	  }
+	}) => {
+	  return {
+	    cursor
+	  };
+	};
+
+	const enhance$1 = compose$1(styles_3(styles$3), connect(mapStateToProps$1))(HomePage);
 
 	var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
