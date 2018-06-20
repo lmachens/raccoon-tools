@@ -28,7 +28,7 @@ class Calculator extends PureComponent {
       const calc = new Calc();
       result = input.length ? calc.compile(input).calc() : '';
     } catch (e) {
-      console.info(e);
+      e;
     }
 
     this.setState({

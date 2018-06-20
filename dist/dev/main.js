@@ -44745,7 +44745,6 @@
           const calc = new exprcalc();
           result = input.length ? calc.compile(input).calc() : '';
         } catch (e) {
-          console.info(e);
         }
 
         this.setState({
@@ -48017,10 +48016,13 @@
       },
       body: {
         margin: 0,
-        backgroundColor: '#2525255c'
+        backgroundColor: '#2525255c',
+        pointerEvents: 'none'
       }
     },
-    header: {}
+    header: {
+      pointerEvents: 'all'
+    }
   };
 
   class AppLayout extends react_2 {
