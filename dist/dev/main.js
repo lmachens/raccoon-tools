@@ -44245,6 +44245,13 @@
 
   const enhance$1 = connect(mapStateToProps)(Navigation);
 
+  class Autorun extends react_2 {
+    render() {
+      return react.createElement(Typography$2, null, "Autorun");
+    }
+
+  }
+
   var exprcalc = createCommonjsModule(function (module, exports) {
   (function(root, factory) {
   	if (typeof undefined === 'function' && undefined.amd) {
@@ -44773,27 +44780,53 @@
 
   }
 
+  class Help extends react_2 {
+    render() {
+      return react.createElement(Typography$2, null, "Help");
+    }
+
+  }
+
+  class Profile extends react_2 {
+    render() {
+      return react.createElement(Typography$2, null, "Profile");
+    }
+
+  }
+
   const general = {
     profile: {
-      title: 'Profile'
+      title: 'Profile',
+      component: Profile
     },
     calculator: {
       title: 'Calculator',
       component: Calculator
     },
-    item3: {
+    settings: {
+      title: 'Settins',
       nested: {
-        item4: {},
-        item5: {
+        autorun: {
+          title: 'Autorun',
+          component: Autorun
+        },
+        advanced: {
+          title: 'Advanced',
           nested: {
-            item6: {}
+            logs: {
+              title: 'Logs',
+              component: Autorun
+            }
           }
         }
       }
     }
   };
   const footer = {
-    help: {}
+    help: {
+      title: 'Help',
+      component: Help
+    }
   };
 
   var KEY_PREFIX = 'persist:';

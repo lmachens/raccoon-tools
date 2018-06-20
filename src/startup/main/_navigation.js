@@ -1,19 +1,31 @@
+import { Autorun } from '../../ui/components/settings';
 import { Calculator } from '../../ui/components/calculator';
+import { Help } from '../../ui/components/help';
+import { Profile } from '../../ui/components/profile';
 
 export const general = {
   profile: {
-    title: 'Profile'
+    title: 'Profile',
+    component: Profile
   },
   calculator: {
     title: 'Calculator',
     component: Calculator
   },
-  item3: {
+  settings: {
+    title: 'Settins',
     nested: {
-      item4: {},
-      item5: {
+      autorun: {
+        title: 'Autorun',
+        component: Autorun
+      },
+      advanced: {
+        title: 'Advanced',
         nested: {
-          item6: {}
+          logs: {
+            title: 'Logs',
+            component: Autorun
+          }
         }
       }
     }
@@ -21,5 +33,8 @@ export const general = {
 };
 
 export const footer = {
-  help: {}
+  help: {
+    title: 'Help',
+    component: Help
+  }
 };
