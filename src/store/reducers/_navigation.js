@@ -14,24 +14,10 @@ import last from 'lodash/last';
 import omit from 'lodash/omit';
 import toPath from 'lodash/toPath';
 
-/*
-pages = {
-  general: {
-    item1: {},
-    item2: {},
-    item3: {
-      item4: {},
-      item5: {}
-    }
-  },
-  other: {}
-}
-*/
-
 export const navigation = (
   state = {
-    cursor: 'general.item1',
-    pages: {}
+    cursor: 'item1',
+    items: {}
   },
   { type, data }
 ) => {
@@ -41,7 +27,7 @@ export const navigation = (
         const path = toPath(state.cursor);
         const prevPath = path.slice(0, path.length - 1);
         const nestedPath = last(path);
-        const items = get(state.pages, prevPath);
+        const items = prevPath.length ? get(state.items, prevPath) : state.items;
         const keys = Object.keys(items);
         const currentIndex = indexOf(keys, nestedPath);
         const newKey = keys[currentIndex + 1];
@@ -57,7 +43,7 @@ export const navigation = (
         const path = toPath(state.cursor);
         const prevPath = path.slice(0, path.length - 1);
         const nestedPath = last(path);
-        const items = get(state.pages, prevPath);
+        const items = prevPath.length ? get(state.items, prevPath) : state.items;
         const keys = Object.keys(items);
         const currentIndex = indexOf(keys, nestedPath);
         const newKey = keys[currentIndex - 1];
@@ -80,7 +66,7 @@ export const navigation = (
       break;
     case NAVIGATE_RIGHT:
       {
-        const nestedItems = get(state.pages, `${state.cursor}.nested`);
+        const nestedItems = get(state.items, `${state.cursor}.nested`);
         if (nestedItems) {
           const firstChild = first(Object.keys(nestedItems));
           const cursor = `${state.cursor}.nested.${firstChild}`;
@@ -89,12 +75,12 @@ export const navigation = (
       }
       break;
     case REGISTER_ITEMS: {
-      const pages = { ...state.pages, [data.page]: data.items };
-      return { ...state, pages };
+      const items = { ...state.items, ...data.items };
+      return { ...state, items };
     }
     case UNREGISTER_ITEMS: {
-      const pages = omit(state.pages, data.page);
-      return { ...state, pages };
+      const items = omit(state.items, ...data.items);
+      return { ...state, items };
     }
   }
   return state;

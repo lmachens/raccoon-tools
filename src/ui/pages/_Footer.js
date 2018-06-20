@@ -6,17 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 const items = {
-  item1: {},
-  item2: {},
-  item3: {
-    nested: {
-      item4: {},
-      item5: {}
-    }
-  }
+  help: {}
 };
 
-class General extends PureComponent {
+class Footer extends PureComponent {
   componentDidMount() {
     const { registerItems } = this.props;
     registerItems({ items });
@@ -32,7 +25,7 @@ class General extends PureComponent {
   }
 }
 
-General.propTypes = {
+Footer.propTypes = {
   registerItems: PropTypes.func.isRequired,
   unregisterItems: PropTypes.func.isRequired
 };
@@ -47,6 +40,6 @@ const mapDispatchToProps = dispatch => {
 const enhance = connect(
   null,
   mapDispatchToProps
-)(General);
+)(Footer);
 
-export { enhance as General };
+export { enhance as Footer };

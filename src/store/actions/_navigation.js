@@ -39,24 +39,23 @@ export const navigateRight = () => {
   };
 };
 
-export const registerItems = ({ items, page }) => {
+export const registerItems = ({ items }) => {
   return dispatch => {
     dispatch({
       type: REGISTER_ITEMS,
       data: {
-        items,
-        page
+        items
       }
     });
   };
 };
 
-export const unregisterItems = ({ page }) => {
+export const unregisterItems = ({ items }) => {
   return dispatch => {
     dispatch({
       type: UNREGISTER_ITEMS,
       data: {
-        page
+        items
       }
     });
   };
