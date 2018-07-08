@@ -47992,7 +47992,7 @@
         store$1.dispatch(navigateDown());
       } else if (e.keyCode === 39) {
         store$1.dispatch(navigateRight());
-      } else if (e.keyCode === 37) {
+      } else if (e.keyCode === 37 || e.keyCode === 8) {
         store$1.dispatch(navigateLeft());
       }
     });
