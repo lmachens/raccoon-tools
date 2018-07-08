@@ -20,8 +20,8 @@ const styles = {
       boxSizing: 'inherit'
     },
     body: {
-      margin: 0,
-      backgroundColor: '#2525255c',
+      margin: 10,
+      backgroundColor: '#101010f2',
       pointerEvents: 'none'
     }
   },

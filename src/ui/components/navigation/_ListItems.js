@@ -8,6 +8,7 @@ class ListItems extends PureComponent {
   render() {
     const { cursor, items, prevCursor } = this.props;
     const path = toPath(cursor);
+    const isNested = path.length > 2;
     return (
       <List dense>
         {Object.entries(items).map(([key, value]) => {
@@ -15,7 +16,7 @@ class ListItems extends PureComponent {
           const selected = cursor === combinedKey;
           return (
             <ListItem button dense key={combinedKey}>
-              {path.length > 2 && <Typography>{'<='}</Typography>}
+              {isNested && <Typography>{'<='}</Typography>}
               <ListItemText
                 primary={
                   <Typography style={{ textDecoration: selected ? 'underline' : null }}>

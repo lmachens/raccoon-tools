@@ -44175,6 +44175,7 @@
         prevCursor
       } = this.props;
       const path = toPath_1(cursor);
+      const isNested = path.length > 2;
       return react.createElement(List$2, {
         dense: true
       }, Object.entries(items).map(([key, value]) => {
@@ -44184,7 +44185,7 @@
           button: true,
           dense: true,
           key: combinedKey
-        }, path.length > 2 && react.createElement(Typography$2, null, '<='), react.createElement(ListItemText$2, {
+        }, isNested && react.createElement(Typography$2, null, '<='), react.createElement(ListItemText$2, {
           primary: react.createElement(Typography$2, {
             style: {
               textDecoration: selected ? 'underline' : null
@@ -44804,7 +44805,7 @@
       component: Calculator
     },
     settings: {
-      title: 'Settins',
+      title: 'Settings',
       nested: {
         autorun: {
           title: 'Autorun',
@@ -47981,18 +47982,25 @@
     store$1.dispatch(fetchOverwolfUser());
     store$1.dispatch(fetchVersion());
     store$1.dispatch(trackGameInfo());
+    const ENTER = 13;
+    const ESCAPE = 27;
+    const UP_ARROW = 38;
+    const LEFT_ARROW = 37;
+    const RIGHT_ARROW = 39;
+    const DOWN_ARROW = 40;
+    const BACKSPACE = 8;
     document.addEventListener('keydown', e => {
-      if (e.keyCode === 13) {
+      if (e.keyCode === ENTER) {
         store$1.dispatch(selectItem());
-      } else if (e.keyCode === 27) {
+      } else if (e.keyCode === ESCAPE) {
         store$1.dispatch(unselectItem());
-      } else if (e.keyCode === 38) {
+      } else if (e.keyCode === UP_ARROW) {
         store$1.dispatch(navigateUp());
-      } else if (e.keyCode === 40) {
+      } else if (e.keyCode === DOWN_ARROW) {
         store$1.dispatch(navigateDown());
-      } else if (e.keyCode === 39) {
+      } else if (e.keyCode === RIGHT_ARROW) {
         store$1.dispatch(navigateRight());
-      } else if (e.keyCode === 37 || e.keyCode === 8) {
+      } else if (e.keyCode === LEFT_ARROW || e.keyCode === BACKSPACE) {
         store$1.dispatch(navigateLeft());
       }
     });
@@ -48048,8 +48056,8 @@
         boxSizing: 'inherit'
       },
       body: {
-        margin: 0,
-        backgroundColor: '#2525255c',
+        margin: 10,
+        backgroundColor: '#101010f2',
         pointerEvents: 'none'
       }
     },

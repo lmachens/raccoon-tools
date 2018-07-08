@@ -13,7 +13,7 @@ export const general = {
     component: Calculator
   },
   settings: {
-    title: 'Settins',
+    title: 'Settings',
     nested: {
       autorun: {
         title: 'Autorun',
