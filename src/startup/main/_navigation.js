@@ -6,11 +6,13 @@ import { Profile } from '../../ui/components/profile';
 export const general = {
   profile: {
     title: 'Profile',
-    component: Profile
+    component: Profile,
+    commandHint: '/profile'
   },
   calculator: {
     title: 'Calculator',
-    component: Calculator
+    component: Calculator,
+    commandHint: '/calc {calculus}'
   },
   settings: {
     title: 'Settings',

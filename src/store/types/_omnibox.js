@@ -1,0 +1,2 @@
+export const FOCUS_OMNIBOX = 'FOCUS_OMNIBOX';
+export const UNFOCUS_OMNIBOX = 'UNFOCUS_OMNIBOX';

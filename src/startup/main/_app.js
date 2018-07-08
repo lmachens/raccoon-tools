@@ -4,6 +4,7 @@ import { persistor, store } from '../../store';
 
 import { AppLayout } from '../../ui/layouts';
 import { MuiThemeProvider } from '@material-ui/core/styles';
+import { Omnibox } from '../../ui/components/omnibox';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import React from 'react';
@@ -19,6 +20,7 @@ const App = (
     <PersistGate loading={null} persistor={persistor}>
       <MuiThemeProvider theme={dark}>
         <AppLayout>
+          <Omnibox />
           <Collection items={general} />
           <Collection items={footer} />
           <Navigation />

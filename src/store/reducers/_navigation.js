@@ -1,10 +1,12 @@
 import {
+  FOCUS_NAVIGATION,
   NAVIGATE_DOWN,
   NAVIGATE_LEFT,
   NAVIGATE_RIGHT,
   NAVIGATE_UP,
   REGISTER_ITEMS,
   SELECT_ITEM,
+  UNFOCUS_NAVIGATION,
   UNREGISTER_ITEMS,
   UNSELECT_ITEM
 } from '../types';
@@ -25,6 +27,10 @@ export const navigation = (
   { type, data }
 ) => {
   switch (type) {
+    case FOCUS_NAVIGATION:
+      return { ...state, cursor: 'profile', selectedItem: null };
+    case UNFOCUS_NAVIGATION:
+      return { ...state, cursor: '', selectedItem: null };
     case NAVIGATE_DOWN:
       {
         const path = toPath(state.cursor);

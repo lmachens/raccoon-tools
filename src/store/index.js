@@ -2,12 +2,14 @@ import { applyMiddleware, createStore } from 'redux';
 import {
   fetchOverwolfUser,
   fetchVersion,
+  focusOmnibox,
   navigateDown,
   navigateLeft,
   navigateRight,
   navigateUp,
   selectItem,
   trackGameInfo,
+  unfocusOmnibox,
   unselectItem
 } from './actions';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -21,7 +23,7 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['games', 'navigation']
+  blacklist: ['games', 'navigation', 'omnibox']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
@@ -46,7 +48,20 @@ export const persistor = persistStore(store, null, () => {
   const RIGHT_ARROW = 39;
   const DOWN_ARROW = 40;
   const BACKSPACE = 8;
+  const SLASH = 191;
   document.addEventListener('keydown', e => {
+    const {
+      omnibox: { focus }
+    } = store.getState();
+    if (focus) {
+      if (e.keyCode === ENTER) {
+        store.dispatch(unfocusOmnibox());
+      } else if (e.keyCode === ESCAPE) {
+        store.dispatch(unfocusOmnibox());
+      }
+      return;
+    }
+
     if (e.keyCode === ENTER) {
       store.dispatch(selectItem());
     } else if (e.keyCode === ESCAPE) {
@@ -59,6 +74,8 @@ export const persistor = persistStore(store, null, () => {
       store.dispatch(navigateRight());
     } else if (e.keyCode === LEFT_ARROW || e.keyCode === BACKSPACE) {
       store.dispatch(navigateLeft());
+    } else if (e.keyCode === SLASH) {
+      store.dispatch(focusOmnibox());
     }
   });
 });

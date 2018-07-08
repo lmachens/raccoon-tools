@@ -4,6 +4,8 @@
   const SET_GAME_IS_RUNNING = 'SET_GAME_IS_RUNNING';
   const SET_GAME_IS_TERMINATED = 'SET_GAME_IS_TERMINATED';
 
+  const FOCUS_NAVIGATION = 'FOCUS_NAVIGATION';
+  const UNFOCUS_NAVIGATION = 'UNFOCUS_NAVIGATION';
   const NAVIGATE_DOWN = 'NAVIGATE_DOWN';
   const NAVIGATE_UP = 'NAVIGATE_UP';
   const NAVIGATE_LEFT = 'NAVIGATE_LEFT';
@@ -12,6 +14,9 @@
   const UNREGISTER_ITEMS = 'UNREGISTER_ITEMS';
   const SELECT_ITEM = 'SELECT_ITEM';
   const UNSELECT_ITEM = 'UNSELECT_ITEM';
+
+  const FOCUS_OMNIBOX = 'FOCUS_OMNIBOX';
+  const UNFOCUS_OMNIBOX = 'UNFOCUS_OMNIBOX';
 
   const RECEIVE_OVERWOLF_USER = 'RECEIVE_OVERWOLF_USER';
   const RECEIVE_VERSION = 'RECEIVE_VERSION';
@@ -1350,6 +1355,27 @@
       if (!selectedItem) return dispatch(navigateLeft());
       dispatch({
         type: UNSELECT_ITEM
+      });
+    };
+  };
+
+  const focusOmnibox = () => {
+    return dispatch => {
+      dispatch({
+        type: FOCUS_OMNIBOX
+      });
+      dispatch({
+        type: UNFOCUS_NAVIGATION
+      });
+    };
+  };
+  const unfocusOmnibox = () => {
+    return dispatch => {
+      dispatch({
+        type: UNFOCUS_OMNIBOX
+      });
+      dispatch({
+        type: FOCUS_NAVIGATION
       });
     };
   };
@@ -44798,11 +44824,13 @@
   const general = {
     profile: {
       title: 'Profile',
-      component: Profile
+      component: Profile,
+      commandHint: '/profile'
     },
     calculator: {
       title: 'Calculator',
-      component: Calculator
+      component: Calculator,
+      commandHint: '/calc {calculus}'
     },
     settings: {
       title: 'Settings',
@@ -47715,6 +47743,18 @@
     data
   }) => {
     switch (type) {
+      case FOCUS_NAVIGATION:
+        return { ...state,
+          cursor: 'profile',
+          selectedItem: null
+        };
+
+      case UNFOCUS_NAVIGATION:
+        return { ...state,
+          cursor: '',
+          selectedItem: null
+        };
+
       case NAVIGATE_DOWN:
         {
           const path = toPath_1(state.cursor);
@@ -47816,6 +47856,27 @@
     return state;
   };
 
+  const omnibox = (state = {
+    command: '',
+    focus: false
+  }, {
+    type
+  }) => {
+    switch (type) {
+      case FOCUS_OMNIBOX:
+        return { ...state,
+          focus: true
+        };
+
+      case UNFOCUS_OMNIBOX:
+        return { ...state,
+          focus: false
+        };
+    }
+
+    return state;
+  };
+
   const utilities = (state = {
     overwolfUser: null,
     version: ''
@@ -47842,6 +47903,7 @@
   const reducers = combineReducers({
     games,
     navigation,
+    omnibox,
     utilities
   });
 
@@ -47965,7 +48027,7 @@
   const persistConfig = {
     key: 'root',
     storage: storage$1,
-    blacklist: ['games', 'navigation']
+    blacklist: ['games', 'navigation', 'omnibox']
   };
   const persistedReducer = persistReducer(persistConfig, reducers);
   let createStoreWithMiddleware;
@@ -47989,7 +48051,24 @@
     const RIGHT_ARROW = 39;
     const DOWN_ARROW = 40;
     const BACKSPACE = 8;
+    const SLASH = 191;
     document.addEventListener('keydown', e => {
+      const {
+        omnibox: {
+          focus
+        }
+      } = store$1.getState();
+
+      if (focus) {
+        if (e.keyCode === ENTER) {
+          store$1.dispatch(unfocusOmnibox());
+        } else if (e.keyCode === ESCAPE) {
+          store$1.dispatch(unfocusOmnibox());
+        }
+
+        return;
+      }
+
       if (e.keyCode === ENTER) {
         store$1.dispatch(selectItem());
       } else if (e.keyCode === ESCAPE) {
@@ -48002,6 +48081,8 @@
         store$1.dispatch(navigateRight());
       } else if (e.keyCode === LEFT_ARROW || e.keyCode === BACKSPACE) {
         store$1.dispatch(navigateLeft());
+      } else if (e.keyCode === SLASH) {
+        store$1.dispatch(focusOmnibox());
       }
     });
   });
@@ -48098,6 +48179,98 @@
   };
 
   const enhance$2 = compose$1(styles_3(styles$2), connect(mapStateToProps$1))(AppLayout);
+
+  class Omnibox extends react_2 {
+    constructor(...args) {
+      super(...args);
+
+      _defineProperty$1(this, "state", {
+        command: ''
+      });
+
+      _defineProperty$1(this, "handleChange", event => {
+        this.setState({
+          command: event.target.value
+        });
+      });
+
+      _defineProperty$1(this, "handleBlur", () => {
+        const {
+          focus,
+          unfocusOmnibox: unfocusOmnibox$$1
+        } = this.props;
+        this.setState({
+          command: ''
+        }, () => {
+          if (focus) unfocusOmnibox$$1();
+        });
+      });
+    }
+
+    componentDidUpdate(prevProps) {
+      const {
+        focus
+      } = this.props;
+
+      if (!prevProps.focus && focus) {
+        this.textField.focus();
+      } else if (prevProps.focus && !focus) {
+        this.textField.blur();
+      }
+    }
+
+    render() {
+      const {
+        commandHint = ''
+      } = this.props;
+      const {
+        command
+      } = this.state;
+      return react.createElement(TextField$2, {
+        fullWidth: true,
+        helperText: "Press / to run a command",
+        InputProps: {
+          onBlur: this.handleBlur
+        },
+        inputRef: element => this.textField = element,
+        onChange: this.handleChange,
+        placeholder: commandHint,
+        value: command
+      });
+    }
+
+  }
+
+  Omnibox.propTypes = {
+    commandHint: propTypes.string,
+    focus: propTypes.bool.isRequired,
+    unfocusOmnibox: propTypes.func.isRequired
+  };
+
+  const mapStateToProps$2 = ({
+    omnibox: {
+      focus
+    },
+    navigation: {
+      cursor,
+      items,
+      selectedItem
+    }
+  }) => {
+    const item = get_1(items, cursor) || selectedItem || {};
+    return {
+      commandHint: item.commandHint,
+      focus
+    };
+  };
+
+  const mapDispatchToProps$1 = dispatch => {
+    return {
+      unfocusOmnibox: bindActionCreators(unfocusOmnibox, dispatch)
+    };
+  };
+
+  const enhance$3 = connect(mapStateToProps$2, mapDispatchToProps$1)(Omnibox);
 
   var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -48196,7 +48369,7 @@
     unselectItem: propTypes.func.isRequired
   };
 
-  const mapStateToProps$2 = ({
+  const mapStateToProps$3 = ({
     navigation: {
       selectedItem
     }
@@ -48206,13 +48379,13 @@
     };
   };
 
-  const mapDispatchToProps$1 = dispatch => {
+  const mapDispatchToProps$2 = dispatch => {
     return {
       unselectItem: bindActionCreators(unselectItem, dispatch)
     };
   };
 
-  const enhance$3 = connect(mapStateToProps$2, mapDispatchToProps$1)(Tool);
+  const enhance$4 = connect(mapStateToProps$3, mapDispatchToProps$2)(Tool);
 
   const dark = styles_2({
     palette: {
@@ -49288,11 +49461,11 @@
     persistor: persistor
   }, react.createElement(styles_1, {
     theme: dark
-  }, react.createElement(enhance$2, null, react.createElement(enhance, {
+  }, react.createElement(enhance$2, null, react.createElement(enhance$3, null), react.createElement(enhance, {
     items: general
   }), react.createElement(enhance, {
     items: footer
-  }), react.createElement(enhance$1, null), react.createElement(enhance$3, null)))));
+  }), react.createElement(enhance$1, null), react.createElement(enhance$4, null)))));
   reactDom.render(App, document.getElementById('root'));
 
   let simpleIoPlugin;
