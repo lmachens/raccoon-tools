@@ -1,5 +1,6 @@
 export * from './_Avatar';
 export * from './_Button';
+export * from './_Divider';
 export * from './_Form';
 export * from './_Grid';
 export * from './_IconButton';

@@ -3,6 +3,7 @@ import { footer, general } from './_navigation';
 import { persistor, store } from '../../store';
 
 import { AppLayout } from '../../ui/layouts';
+import { GameInfo } from '../../ui/components/games';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import { Omnibox } from '../../ui/components/omnibox';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -21,6 +22,7 @@ const App = (
       <MuiThemeProvider theme={dark}>
         <AppLayout>
           <Omnibox />
+          <GameInfo />
           <Collection items={general} />
           <Collection items={footer} />
           <Navigation />

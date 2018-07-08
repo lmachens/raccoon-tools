@@ -3,7 +3,7 @@ import { addGameInfoUpdatedListener, addGameLaunchedListener } from '../../api/g
 
 export const trackGameInfo = () => {
   return (dispatch, getState) => {
-    const gameLaunchedListener = ({ title, id }) => {
+    const gameLaunchedListener = gameInfo => {
       const {
         settings: { stopMiningOnGameLaunch }
       } = getState();
@@ -12,7 +12,7 @@ export const trackGameInfo = () => {
 
       dispatch({
         type: SET_GAME_IS_RUNNING,
-        data: { title, id }
+        data: { gameInfo }
       });
     };
     const gameInfoUpdatedListener = ({ runningChanged, gameInfo }) => {
@@ -23,11 +23,9 @@ export const trackGameInfo = () => {
       if (!stopMiningOnGameLaunch) return;
 
       if (!runningChanged) return;
-      const data = { title: gameInfo.title, id: gameInfo.id };
       if (!gameInfo.isRunning) {
         dispatch({
-          type: SET_GAME_IS_TERMINATED,
-          data
+          type: SET_GAME_IS_TERMINATED
         });
       }
     };

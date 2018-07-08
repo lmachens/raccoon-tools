@@ -20,8 +20,8 @@ class Navigation extends PureComponent {
     const currentItems = prevPath.length ? get(items, prevPath) : items;
     return (
       <>
-        <Typography>Use ↑ ↓ → ← to navigate and ↵ to select</Typography>
         <ListItems cursor={cursor} items={currentItems || {}} prevCursor={prevCursor} />
+        <Typography>Use ↑ ↓ → ← to navigate and ↵ to select</Typography>
       </>
     );
   }

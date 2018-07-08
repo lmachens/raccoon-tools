@@ -30,10 +30,7 @@
 
   const trackGameInfo = () => {
     return (dispatch, getState) => {
-      const gameLaunchedListener = ({
-        title,
-        id
-      }) => {
+      const gameLaunchedListener = gameInfo => {
         const {
           settings: {
             stopMiningOnGameLaunch
@@ -43,8 +40,7 @@
         dispatch({
           type: SET_GAME_IS_RUNNING,
           data: {
-            title,
-            id
+            gameInfo
           }
         });
       };
@@ -60,15 +56,10 @@
         } = getState();
         if (!stopMiningOnGameLaunch) return;
         if (!runningChanged) return;
-        const data = {
-          title: gameInfo.title,
-          id: gameInfo.id
-        };
 
         if (!gameInfo.isRunning) {
           dispatch({
-            type: SET_GAME_IS_TERMINATED,
-            data
+            type: SET_GAME_IS_TERMINATED
           });
         }
       };
@@ -32613,6 +32604,140 @@
 
   unwrapExports(Button$1);
 
+  var Divider_1 = createCommonjsModule(function (module, exports) {
+
+
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = exports.styles = void 0;
+
+  var _extends2 = interopRequireDefault(_extends_1);
+
+  var _defineProperty2 = interopRequireDefault(defineProperty);
+
+  var _objectWithoutProperties2 = interopRequireDefault(objectWithoutProperties);
+
+  var _react = interopRequireDefault(react);
+
+  var _propTypes = interopRequireDefault(propTypes);
+
+  var _classnames = interopRequireDefault(classnames);
+
+  var _withStyles = interopRequireDefault(withStyles_1);
+
+
+
+  var styles = function styles(theme) {
+    return {
+      root: {
+        height: 1,
+        margin: 0,
+        // Reset browser default style.
+        border: 'none',
+        flexShrink: 0,
+        backgroundColor: theme.palette.divider
+      },
+      absolute: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%'
+      },
+      inset: {
+        marginLeft: theme.spacing.unit * 9
+      },
+      light: {
+        backgroundColor: (0, colorManipulator.fade)(theme.palette.divider, 0.08)
+      }
+    };
+  };
+
+  exports.styles = styles;
+
+  function Divider(props) {
+    var _classNames;
+
+    var absolute = props.absolute,
+        classes = props.classes,
+        classNameProp = props.className,
+        Component = props.component,
+        inset = props.inset,
+        light = props.light,
+        other = (0, _objectWithoutProperties2.default)(props, ["absolute", "classes", "className", "component", "inset", "light"]);
+    var className = (0, _classnames.default)(classes.root, (_classNames = {}, (0, _defineProperty2.default)(_classNames, classes.absolute, absolute), (0, _defineProperty2.default)(_classNames, classes.inset, inset), (0, _defineProperty2.default)(_classNames, classes.light, light), _classNames), classNameProp);
+    return _react.default.createElement(Component, (0, _extends2.default)({
+      className: className
+    }, other));
+  }
+
+  Divider.propTypes = {
+    absolute: _propTypes.default.bool,
+
+    /**
+     * Override or extend the styles applied to the component.
+     * See [CSS API](#css-api) below for more details.
+     */
+    classes: _propTypes.default.object.isRequired,
+
+    /**
+     * @ignore
+     */
+    className: _propTypes.default.string,
+
+    /**
+     * The component used for the root node.
+     * Either a string to use a DOM element or a component.
+     */
+    component: _propTypes.default.oneOfType([_propTypes.default.string, _propTypes.default.func]),
+
+    /**
+     * If `true`, the divider will be indented.
+     */
+    inset: _propTypes.default.bool,
+
+    /**
+     * If `true`, the divider will have a lighter color.
+     */
+    light: _propTypes.default.bool
+  };
+  Divider.defaultProps = {
+    absolute: false,
+    component: 'hr',
+    inset: false,
+    light: false
+  };
+
+  var _default = (0, _withStyles.default)(styles, {
+    name: 'MuiDivider'
+  })(Divider);
+
+  exports.default = _default;
+  });
+
+  unwrapExports(Divider_1);
+  var Divider_2 = Divider_1.styles;
+
+  var Divider$1 = createCommonjsModule(function (module, exports) {
+
+
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, "default", {
+    enumerable: true,
+    get: function get() {
+      return _Divider.default;
+    }
+  });
+
+  var _Divider = interopRequireDefault(Divider_1);
+  });
+
+  unwrapExports(Divider$1);
+
   /**
    * Returns a function, that, as long as it continues to be invoked, will not
    * be triggered. The function will be called after it stops being called for
@@ -44241,11 +44366,11 @@
       const prevPath = path.slice(0, path.length - 1);
       const prevCursor = prevPath.length > 0 ? prevPath.reduce((curr, next) => `${curr}.${next}`) : null;
       const currentItems = prevPath.length ? get_1(items, prevPath) : items;
-      return react.createElement(react.Fragment, null, react.createElement(Typography$2, null, "Use \u2191 \u2193 \u2192 \u2190 to navigate and \u21B5 to select"), react.createElement(ListItems, {
+      return react.createElement(react.Fragment, null, react.createElement(ListItems, {
         cursor: cursor,
         items: currentItems || {},
         prevCursor: prevCursor
-      }));
+      }), react.createElement(Typography$2, null, "Use \u2191 \u2193 \u2192 \u2190 to navigate and \u21B5 to select"));
     }
 
   }
@@ -45357,6 +45482,329 @@
   }
 
   var built = createRavenMiddleware;
+
+  const gameInfo = (state = {}, {
+    type,
+    data
+  }) => {
+    switch (type) {
+      case SET_GAME_IS_RUNNING:
+        return { ...data.gameInfo
+        };
+
+      case SET_GAME_IS_TERMINATED:
+        return {};
+
+      default:
+        return state;
+    }
+  };
+
+  /**
+   * Gets the first element of `array`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @alias first
+   * @category Array
+   * @param {Array} array The array to query.
+   * @returns {*} Returns the first element of `array`.
+   * @example
+   *
+   * _.head([1, 2, 3]);
+   * // => 1
+   *
+   * _.head([]);
+   * // => undefined
+   */
+  function head(array) {
+    return (array && array.length) ? array[0] : undefined;
+  }
+
+  var head_1 = head;
+
+  var first = head_1;
+
+  /**
+   * The base implementation of `_.findIndex` and `_.findLastIndex` without
+   * support for iteratee shorthands.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {Function} predicate The function invoked per iteration.
+   * @param {number} fromIndex The index to search from.
+   * @param {boolean} [fromRight] Specify iterating from right to left.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseFindIndex(array, predicate, fromIndex, fromRight) {
+    var length = array.length,
+        index = fromIndex + (fromRight ? 1 : -1);
+
+    while ((fromRight ? index-- : ++index < length)) {
+      if (predicate(array[index], index, array)) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  var _baseFindIndex = baseFindIndex;
+
+  /**
+   * The base implementation of `_.isNaN` without support for number objects.
+   *
+   * @private
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is `NaN`, else `false`.
+   */
+  function baseIsNaN(value) {
+    return value !== value;
+  }
+
+  var _baseIsNaN = baseIsNaN;
+
+  /**
+   * A specialized version of `_.indexOf` which performs strict equality
+   * comparisons of values, i.e. `===`.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function strictIndexOf(array, value, fromIndex) {
+    var index = fromIndex - 1,
+        length = array.length;
+
+    while (++index < length) {
+      if (array[index] === value) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
+  var _strictIndexOf = strictIndexOf;
+
+  /**
+   * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
+   *
+   * @private
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} fromIndex The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   */
+  function baseIndexOf(array, value, fromIndex) {
+    return value === value
+      ? _strictIndexOf(array, value, fromIndex)
+      : _baseFindIndex(array, _baseIsNaN, fromIndex);
+  }
+
+  var _baseIndexOf = baseIndexOf;
+
+  /** Used as references for various `Number` constants. */
+  var NAN = 0 / 0;
+
+  /** Used to match leading and trailing whitespace. */
+  var reTrim = /^\s+|\s+$/g;
+
+  /** Used to detect bad signed hexadecimal string values. */
+  var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+  /** Used to detect binary string values. */
+  var reIsBinary = /^0b[01]+$/i;
+
+  /** Used to detect octal string values. */
+  var reIsOctal = /^0o[0-7]+$/i;
+
+  /** Built-in method references without a dependency on `root`. */
+  var freeParseInt = parseInt;
+
+  /**
+   * Converts `value` to a number.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to process.
+   * @returns {number} Returns the number.
+   * @example
+   *
+   * _.toNumber(3.2);
+   * // => 3.2
+   *
+   * _.toNumber(Number.MIN_VALUE);
+   * // => 5e-324
+   *
+   * _.toNumber(Infinity);
+   * // => Infinity
+   *
+   * _.toNumber('3.2');
+   * // => 3.2
+   */
+  function toNumber(value) {
+    if (typeof value == 'number') {
+      return value;
+    }
+    if (isSymbol_1(value)) {
+      return NAN;
+    }
+    if (isObject_1(value)) {
+      var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+      value = isObject_1(other) ? (other + '') : other;
+    }
+    if (typeof value != 'string') {
+      return value === 0 ? value : +value;
+    }
+    value = value.replace(reTrim, '');
+    var isBinary = reIsBinary.test(value);
+    return (isBinary || reIsOctal.test(value))
+      ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+      : (reIsBadHex.test(value) ? NAN : +value);
+  }
+
+  var toNumber_1 = toNumber;
+
+  /** Used as references for various `Number` constants. */
+  var INFINITY$2 = 1 / 0,
+      MAX_INTEGER = 1.7976931348623157e+308;
+
+  /**
+   * Converts `value` to a finite number.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.12.0
+   * @category Lang
+   * @param {*} value The value to convert.
+   * @returns {number} Returns the converted number.
+   * @example
+   *
+   * _.toFinite(3.2);
+   * // => 3.2
+   *
+   * _.toFinite(Number.MIN_VALUE);
+   * // => 5e-324
+   *
+   * _.toFinite(Infinity);
+   * // => 1.7976931348623157e+308
+   *
+   * _.toFinite('3.2');
+   * // => 3.2
+   */
+  function toFinite(value) {
+    if (!value) {
+      return value === 0 ? value : 0;
+    }
+    value = toNumber_1(value);
+    if (value === INFINITY$2 || value === -INFINITY$2) {
+      var sign = (value < 0 ? -1 : 1);
+      return sign * MAX_INTEGER;
+    }
+    return value === value ? value : 0;
+  }
+
+  var toFinite_1 = toFinite;
+
+  /**
+   * Converts `value` to an integer.
+   *
+   * **Note:** This method is loosely based on
+   * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to convert.
+   * @returns {number} Returns the converted integer.
+   * @example
+   *
+   * _.toInteger(3.2);
+   * // => 3
+   *
+   * _.toInteger(Number.MIN_VALUE);
+   * // => 0
+   *
+   * _.toInteger(Infinity);
+   * // => 1.7976931348623157e+308
+   *
+   * _.toInteger('3.2');
+   * // => 3
+   */
+  function toInteger(value) {
+    var result = toFinite_1(value),
+        remainder = result % 1;
+
+    return result === result ? (remainder ? result - remainder : result) : 0;
+  }
+
+  var toInteger_1 = toInteger;
+
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+  var nativeMax = Math.max;
+
+  /**
+   * Gets the index at which the first occurrence of `value` is found in `array`
+   * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
+   * for equality comparisons. If `fromIndex` is negative, it's used as the
+   * offset from the end of `array`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Array
+   * @param {Array} array The array to inspect.
+   * @param {*} value The value to search for.
+   * @param {number} [fromIndex=0] The index to search from.
+   * @returns {number} Returns the index of the matched value, else `-1`.
+   * @example
+   *
+   * _.indexOf([1, 2, 1, 2], 2);
+   * // => 1
+   *
+   * // Search from the `fromIndex`.
+   * _.indexOf([1, 2, 1, 2], 2, 2);
+   * // => 3
+   */
+  function indexOf(array, value, fromIndex) {
+    var length = array == null ? 0 : array.length;
+    if (!length) {
+      return -1;
+    }
+    var index = fromIndex == null ? 0 : toInteger_1(fromIndex);
+    if (index < 0) {
+      index = nativeMax(length + index, 0);
+    }
+    return _baseIndexOf(array, value, index);
+  }
+
+  var indexOf_1 = indexOf;
+
+  /**
+   * Gets the last element of `array`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Array
+   * @param {Array} array The array to query.
+   * @returns {*} Returns the last element of `array`.
+   * @example
+   *
+   * _.last([1, 2, 3]);
+   * // => 3
+   */
+  function last(array) {
+    var length = array == null ? 0 : array.length;
+    return length ? array[length - 1] : undefined;
+  }
+
+  var last_1 = last;
 
   /**
    * Removes all key-value entries from the stack.
@@ -46961,27 +47409,6 @@
   var _baseClone = baseClone;
 
   /**
-   * Gets the last element of `array`.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Array
-   * @param {Array} array The array to query.
-   * @returns {*} Returns the last element of `array`.
-   * @example
-   *
-   * _.last([1, 2, 3]);
-   * // => 3
-   */
-  function last(array) {
-    var length = array == null ? 0 : array.length;
-    return length ? array[length - 1] : undefined;
-  }
-
-  var last_1 = last;
-
-  /**
    * The base implementation of `_.slice` without an iteratee call guard.
    *
    * @private
@@ -47214,7 +47641,7 @@
   var _apply = apply;
 
   /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax = Math.max;
+  var nativeMax$1 = Math.max;
 
   /**
    * A specialized version of `baseRest` which transforms the rest array.
@@ -47226,11 +47653,11 @@
    * @returns {Function} Returns the new function.
    */
   function overRest(func, start, transform) {
-    start = nativeMax(start === undefined ? (func.length - 1) : start, 0);
+    start = nativeMax$1(start === undefined ? (func.length - 1) : start, 0);
     return function() {
       var args = arguments,
           index = -1,
-          length = nativeMax(args.length - start, 0),
+          length = nativeMax$1(args.length - start, 0),
           array = Array(length);
 
       while (++index < length) {
@@ -47428,312 +47855,6 @@
 
   var omit_1 = omit;
 
-  const games = (state = {}, {
-    type,
-    data
-  }) => {
-    switch (type) {
-      case SET_GAME_IS_RUNNING:
-        return { ...state,
-          [data.id]: {
-            title: data.title,
-            isRunning: true
-          }
-        };
-
-      case SET_GAME_IS_TERMINATED:
-        return omit_1(state, data.id);
-
-      default:
-        return state;
-    }
-  };
-
-  /**
-   * Gets the first element of `array`.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @alias first
-   * @category Array
-   * @param {Array} array The array to query.
-   * @returns {*} Returns the first element of `array`.
-   * @example
-   *
-   * _.head([1, 2, 3]);
-   * // => 1
-   *
-   * _.head([]);
-   * // => undefined
-   */
-  function head(array) {
-    return (array && array.length) ? array[0] : undefined;
-  }
-
-  var head_1 = head;
-
-  var first = head_1;
-
-  /**
-   * The base implementation of `_.findIndex` and `_.findLastIndex` without
-   * support for iteratee shorthands.
-   *
-   * @private
-   * @param {Array} array The array to inspect.
-   * @param {Function} predicate The function invoked per iteration.
-   * @param {number} fromIndex The index to search from.
-   * @param {boolean} [fromRight] Specify iterating from right to left.
-   * @returns {number} Returns the index of the matched value, else `-1`.
-   */
-  function baseFindIndex(array, predicate, fromIndex, fromRight) {
-    var length = array.length,
-        index = fromIndex + (fromRight ? 1 : -1);
-
-    while ((fromRight ? index-- : ++index < length)) {
-      if (predicate(array[index], index, array)) {
-        return index;
-      }
-    }
-    return -1;
-  }
-
-  var _baseFindIndex = baseFindIndex;
-
-  /**
-   * The base implementation of `_.isNaN` without support for number objects.
-   *
-   * @private
-   * @param {*} value The value to check.
-   * @returns {boolean} Returns `true` if `value` is `NaN`, else `false`.
-   */
-  function baseIsNaN(value) {
-    return value !== value;
-  }
-
-  var _baseIsNaN = baseIsNaN;
-
-  /**
-   * A specialized version of `_.indexOf` which performs strict equality
-   * comparisons of values, i.e. `===`.
-   *
-   * @private
-   * @param {Array} array The array to inspect.
-   * @param {*} value The value to search for.
-   * @param {number} fromIndex The index to search from.
-   * @returns {number} Returns the index of the matched value, else `-1`.
-   */
-  function strictIndexOf(array, value, fromIndex) {
-    var index = fromIndex - 1,
-        length = array.length;
-
-    while (++index < length) {
-      if (array[index] === value) {
-        return index;
-      }
-    }
-    return -1;
-  }
-
-  var _strictIndexOf = strictIndexOf;
-
-  /**
-   * The base implementation of `_.indexOf` without `fromIndex` bounds checks.
-   *
-   * @private
-   * @param {Array} array The array to inspect.
-   * @param {*} value The value to search for.
-   * @param {number} fromIndex The index to search from.
-   * @returns {number} Returns the index of the matched value, else `-1`.
-   */
-  function baseIndexOf(array, value, fromIndex) {
-    return value === value
-      ? _strictIndexOf(array, value, fromIndex)
-      : _baseFindIndex(array, _baseIsNaN, fromIndex);
-  }
-
-  var _baseIndexOf = baseIndexOf;
-
-  /** Used as references for various `Number` constants. */
-  var NAN = 0 / 0;
-
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g;
-
-  /** Used to detect bad signed hexadecimal string values. */
-  var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-  /** Used to detect binary string values. */
-  var reIsBinary = /^0b[01]+$/i;
-
-  /** Used to detect octal string values. */
-  var reIsOctal = /^0o[0-7]+$/i;
-
-  /** Built-in method references without a dependency on `root`. */
-  var freeParseInt = parseInt;
-
-  /**
-   * Converts `value` to a number.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.0.0
-   * @category Lang
-   * @param {*} value The value to process.
-   * @returns {number} Returns the number.
-   * @example
-   *
-   * _.toNumber(3.2);
-   * // => 3.2
-   *
-   * _.toNumber(Number.MIN_VALUE);
-   * // => 5e-324
-   *
-   * _.toNumber(Infinity);
-   * // => Infinity
-   *
-   * _.toNumber('3.2');
-   * // => 3.2
-   */
-  function toNumber(value) {
-    if (typeof value == 'number') {
-      return value;
-    }
-    if (isSymbol_1(value)) {
-      return NAN;
-    }
-    if (isObject_1(value)) {
-      var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-      value = isObject_1(other) ? (other + '') : other;
-    }
-    if (typeof value != 'string') {
-      return value === 0 ? value : +value;
-    }
-    value = value.replace(reTrim, '');
-    var isBinary = reIsBinary.test(value);
-    return (isBinary || reIsOctal.test(value))
-      ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-      : (reIsBadHex.test(value) ? NAN : +value);
-  }
-
-  var toNumber_1 = toNumber;
-
-  /** Used as references for various `Number` constants. */
-  var INFINITY$2 = 1 / 0,
-      MAX_INTEGER = 1.7976931348623157e+308;
-
-  /**
-   * Converts `value` to a finite number.
-   *
-   * @static
-   * @memberOf _
-   * @since 4.12.0
-   * @category Lang
-   * @param {*} value The value to convert.
-   * @returns {number} Returns the converted number.
-   * @example
-   *
-   * _.toFinite(3.2);
-   * // => 3.2
-   *
-   * _.toFinite(Number.MIN_VALUE);
-   * // => 5e-324
-   *
-   * _.toFinite(Infinity);
-   * // => 1.7976931348623157e+308
-   *
-   * _.toFinite('3.2');
-   * // => 3.2
-   */
-  function toFinite(value) {
-    if (!value) {
-      return value === 0 ? value : 0;
-    }
-    value = toNumber_1(value);
-    if (value === INFINITY$2 || value === -INFINITY$2) {
-      var sign = (value < 0 ? -1 : 1);
-      return sign * MAX_INTEGER;
-    }
-    return value === value ? value : 0;
-  }
-
-  var toFinite_1 = toFinite;
-
-  /**
-   * Converts `value` to an integer.
-   *
-   * **Note:** This method is loosely based on
-   * [`ToInteger`](http://www.ecma-international.org/ecma-262/7.0/#sec-tointeger).
-   *
-   * @static
-   * @memberOf _
-   * @since 4.0.0
-   * @category Lang
-   * @param {*} value The value to convert.
-   * @returns {number} Returns the converted integer.
-   * @example
-   *
-   * _.toInteger(3.2);
-   * // => 3
-   *
-   * _.toInteger(Number.MIN_VALUE);
-   * // => 0
-   *
-   * _.toInteger(Infinity);
-   * // => 1.7976931348623157e+308
-   *
-   * _.toInteger('3.2');
-   * // => 3
-   */
-  function toInteger(value) {
-    var result = toFinite_1(value),
-        remainder = result % 1;
-
-    return result === result ? (remainder ? result - remainder : result) : 0;
-  }
-
-  var toInteger_1 = toInteger;
-
-  /* Built-in method references for those with the same name as other `lodash` methods. */
-  var nativeMax$1 = Math.max;
-
-  /**
-   * Gets the index at which the first occurrence of `value` is found in `array`
-   * using [`SameValueZero`](http://ecma-international.org/ecma-262/7.0/#sec-samevaluezero)
-   * for equality comparisons. If `fromIndex` is negative, it's used as the
-   * offset from the end of `array`.
-   *
-   * @static
-   * @memberOf _
-   * @since 0.1.0
-   * @category Array
-   * @param {Array} array The array to inspect.
-   * @param {*} value The value to search for.
-   * @param {number} [fromIndex=0] The index to search from.
-   * @returns {number} Returns the index of the matched value, else `-1`.
-   * @example
-   *
-   * _.indexOf([1, 2, 1, 2], 2);
-   * // => 1
-   *
-   * // Search from the `fromIndex`.
-   * _.indexOf([1, 2, 1, 2], 2, 2);
-   * // => 3
-   */
-  function indexOf(array, value, fromIndex) {
-    var length = array == null ? 0 : array.length;
-    if (!length) {
-      return -1;
-    }
-    var index = fromIndex == null ? 0 : toInteger_1(fromIndex);
-    if (index < 0) {
-      index = nativeMax$1(length + index, 0);
-    }
-    return _baseIndexOf(array, value, index);
-  }
-
-  var indexOf_1 = indexOf;
-
   const navigation = (state = {
     cursor: 'profile',
     items: {},
@@ -47901,7 +48022,7 @@
   };
 
   const reducers = combineReducers({
-    games,
+    gameInfo,
     navigation,
     omnibox,
     utilities
@@ -48027,7 +48148,7 @@
   const persistConfig = {
     key: 'root',
     storage: storage$1,
-    blacklist: ['games', 'navigation', 'omnibox']
+    blacklist: ['gameInfo', 'navigation', 'omnibox']
   };
   const persistedReducer = persistReducer(persistConfig, reducers);
   let createStoreWithMiddleware;
@@ -48180,6 +48301,30 @@
 
   const enhance$2 = compose$1(styles_3(styles$2), connect(mapStateToProps$1))(AppLayout);
 
+  class GameInfo extends react_2 {
+    render() {
+      const {
+        title
+      } = this.props;
+      if (!title) return react.createElement(Typography$2, null, "No game found");
+      return react.createElement(react.Fragment, null, react.createElement(Typography$2, null, title));
+    }
+
+  }
+
+  GameInfo.propTypes = {
+    title: propTypes.string
+  };
+
+  const mapStateToProps$2 = ({
+    gameInfo
+  }) => {
+    return { ...gameInfo
+    };
+  };
+
+  const enhance$3 = connect(mapStateToProps$2)(GameInfo);
+
   class Omnibox extends react_2 {
     constructor(...args) {
       super(...args);
@@ -48247,7 +48392,7 @@
     unfocusOmnibox: propTypes.func.isRequired
   };
 
-  const mapStateToProps$2 = ({
+  const mapStateToProps$3 = ({
     omnibox: {
       focus
     },
@@ -48270,7 +48415,7 @@
     };
   };
 
-  const enhance$3 = connect(mapStateToProps$2, mapDispatchToProps$1)(Omnibox);
+  const enhance$4 = connect(mapStateToProps$3, mapDispatchToProps$1)(Omnibox);
 
   var _createClass$2 = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -48369,7 +48514,7 @@
     unselectItem: propTypes.func.isRequired
   };
 
-  const mapStateToProps$3 = ({
+  const mapStateToProps$4 = ({
     navigation: {
       selectedItem
     }
@@ -48385,7 +48530,7 @@
     };
   };
 
-  const enhance$4 = connect(mapStateToProps$3, mapDispatchToProps$2)(Tool);
+  const enhance$5 = connect(mapStateToProps$4, mapDispatchToProps$2)(Tool);
 
   const dark = styles_2({
     palette: {
@@ -49461,11 +49606,11 @@
     persistor: persistor
   }, react.createElement(styles_1, {
     theme: dark
-  }, react.createElement(enhance$2, null, react.createElement(enhance$3, null), react.createElement(enhance, {
+  }, react.createElement(enhance$2, null, react.createElement(enhance$4, null), react.createElement(enhance$3, null), react.createElement(enhance, {
     items: general
   }), react.createElement(enhance, {
     items: footer
-  }), react.createElement(enhance$1, null), react.createElement(enhance$4, null)))));
+  }), react.createElement(enhance$1, null), react.createElement(enhance$5, null)))));
   reactDom.render(App, document.getElementById('root'));
 
   let simpleIoPlugin;

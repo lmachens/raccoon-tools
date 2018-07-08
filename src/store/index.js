@@ -23,7 +23,7 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['games', 'navigation', 'omnibox']
+  blacklist: ['gameInfo', 'navigation', 'omnibox']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
