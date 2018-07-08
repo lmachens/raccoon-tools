@@ -44241,7 +44241,7 @@
       const prevPath = path.slice(0, path.length - 1);
       const prevCursor = prevPath.length > 0 ? prevPath.reduce((curr, next) => `${curr}.${next}`) : null;
       const currentItems = prevPath.length ? get_1(items, prevPath) : items;
-      return react.createElement(react.Fragment, null, react.createElement(Typography$2, null, "User \u2191 \u2193 \u2192 \u2190 to navigate and \u21B5 to select"), react.createElement(ListItems, {
+      return react.createElement(react.Fragment, null, react.createElement(Typography$2, null, "Use \u2191 \u2193 \u2192 \u2190 to navigate and \u21B5 to select"), react.createElement(ListItems, {
         cursor: cursor,
         items: currentItems || {},
         prevCursor: prevCursor

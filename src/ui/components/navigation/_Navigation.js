@@ -2,10 +2,10 @@ import React, { PureComponent } from 'react';
 
 import { ListItems } from './_ListItems';
 import PropTypes from 'prop-types';
+import { Typography } from '../generic';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import toPath from 'lodash/toPath';
-import { Typography } from '../generic';
 
 class Navigation extends PureComponent {
   render() {
@@ -20,7 +20,7 @@ class Navigation extends PureComponent {
     const currentItems = prevPath.length ? get(items, prevPath) : items;
     return (
       <>
-        <Typography>User ↑ ↓ → ← to navigate and ↵ to select</Typography>
+        <Typography>Use ↑ ↓ → ← to navigate and ↵ to select</Typography>
         <ListItems cursor={cursor} items={currentItems || {}} prevCursor={prevCursor} />
       </>
     );
